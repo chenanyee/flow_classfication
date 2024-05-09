@@ -1,5 +1,5 @@
 import os
-
+from cat_model import cat_model
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -11,14 +11,12 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 import torchvision.transforms as transforms
 from urllib.request import urlopen
-
+from train import train
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+from image_dataset import image_dataset
 
 if __name__ == '__main__':
-    inputSize = 224
-    print('Hello LBY')
-    print('I love lby my bebe')
+    inputSize = 1200
     dataTransformsTrain = transforms.Compose([
         transforms.RandomResizedCrop(inputSize),
         transforms.RandomHorizontalFlip(),
@@ -33,14 +31,9 @@ if __name__ == '__main__':
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    if useCustomizeDataset:
-        trainDatasets = image_dataset("dataset/train.csv", "dataset/cosmetics-all", dataTransformsTrain)
-        validDatasets = image_dataset("dataset/valid.csv", "dataset/cosmetics-all", dataTransformsValid)
-        classList = "\n".join(testDatasets.__class__())
-    else:
-        trainDatasets = datasets.ImageFolder(os.path.join("dataset/cosmetics-category", "train"), dataTransformsTrain)
-        validDatasets = datasets.ImageFolder(os.path.join("dataset/cosmetics-category", "valid"), dataTransformsValid)
-        classList = "\n".join(sorted(os.listdir(os.path.join("dataset/cosmetics-category", "train"))))
+    trainDatasets = image_dataset("dataset/train.csv", "dataset/cosmetics-all", dataTransformsTrain)
+    validDatasets = image_dataset("dataset/valid.csv", "dataset/cosmetics-all", dataTransformsValid)
+    classList = "\n".join(trainDatasets.__class__())
 
     # make classes.txt
     with open("dataset/classes.txt", "w") as f:
