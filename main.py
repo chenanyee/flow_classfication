@@ -31,19 +31,13 @@ if __name__ == '__main__':
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    trainDatasets = image_dataset("dataset/train.csv", "dataset/cosmetics-all", dataTransformsTrain)
-    validDatasets = image_dataset("dataset/valid.csv", "dataset/cosmetics-all", dataTransformsValid)
-    classList = "\n".join(trainDatasets.__class__())
-
-    # make classes.txt
-    with open("dataset/classes.txt", "w") as f:
-        f.write(classList)
-
-    dataloadersTrain = torch.utils.data.DataLoader(trainDatasets, batch_size=32, shuffle=True, num_workers=4)
+    trainDatasets = image_dataset("./dataset/train.csv", "./dataset/train", dataTransformsTrain)
+    validDatasets = image_dataset("./dataset/valid.csv", "./dataset/valid", dataTransformsValid)
+    dataloadersTrain = torch.utils.data.DataLoader(trainDatasets, batch_size=32, shuffle=True, num_workers=0)
     dataloadersValid = torch.utils.data.DataLoader(validDatasets, batch_size=32, shuffle=False)
 
     # load model
-    model = cat_model(numClasses=7).to(device)
+    model = cat_model(numClasses=2).to(device)
 
     # set optimization function
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
