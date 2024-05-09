@@ -18,6 +18,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 if __name__ == '__main__':
     inputSize = 224
     print('Hello LBY')
+    print('I love lby my bebe')
     dataTransformsTrain = transforms.Compose([
         transforms.RandomResizedCrop(inputSize),
         transforms.RandomHorizontalFlip(),
