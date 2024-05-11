@@ -14,7 +14,7 @@ class image_dataset(Dataset):
 
     def __getitem__(self, index):
         img = Image.open(os.path.join(self.rootPath, self.xTrain[index]))
-        img = img.convert('RGB')
+        img = img.convert('L')
         if self.transform is not None:
             img = self.transform(img)
         return img, self.yTrain[index]

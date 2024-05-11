@@ -18,26 +18,31 @@ from image_dataset import image_dataset
 if __name__ == '__main__':
     inputSize = 1200
     dataTransformsTrain = transforms.Compose([
-        transforms.RandomResizedCrop(inputSize),
-        transforms.RandomHorizontalFlip(),
+        #transforms.RandomResizedCrop(inputSize),
+        #transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
     dataTransformsValid = transforms.Compose([
-        transforms.Resize(inputSize),
-        transforms.CenterCrop(inputSize),
+        #transforms.Resize(inputSize),
+        #transforms.CenterCrop(inputSize),
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
     trainDatasets = image_dataset("./dataset/train.csv", "./dataset/train", dataTransformsTrain)
     validDatasets = image_dataset("./dataset/valid.csv", "./dataset/valid", dataTransformsValid)
-    dataloadersTrain = torch.utils.data.DataLoader(trainDatasets, batch_size=32, shuffle=True, num_workers=0)
-    dataloadersValid = torch.utils.data.DataLoader(validDatasets, batch_size=32, shuffle=False)
+    dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
+                                                   batch_size=4,
+                                                   shuffle=True,
+                                                   num_workers=0)
+    dataloadersValid = torch.utils.data.DataLoader(validDatasets,
+                                                   batch_size=4,
+                                                   shuffle=False)
 
     # load model
-    model = cat_model(numClasses=2).to(device)
+    model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
 
     # set optimization function
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
