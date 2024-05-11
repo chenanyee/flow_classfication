@@ -9,7 +9,10 @@ class image_dataset(Dataset):
         df = pd.read_csv(csvFile)
         self.rootPath = rootPath
         self.xTrain = df['path']
-        self.yTrain = pd.factorize(df['label'], sort=True)[0]
+        label_mapping = {'NH': 0, 'H': 1}
+        df['label'] = df['label'].map(label_mapping)
+        self.yTrain = df['label']
+        #self.yTrain = pd.factorize(df['label'], sort=True)[0]
         self.transform = transform
 
     def __getitem__(self, index):

@@ -36,7 +36,7 @@ if __name__ == '__main__':
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
                                                    batch_size=4,
                                                    shuffle=True,
-                                                   num_workers=0)
+                                                   num_workers=8)
     dataloadersValid = torch.utils.data.DataLoader(validDatasets,
                                                    batch_size=4,
                                                    shuffle=False)
@@ -47,7 +47,8 @@ if __name__ == '__main__':
     # set optimization function
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-    criterion = nn.CrossEntropyLoss().to(device)
+    weights = torch.tensor([1.0, 10.0], device=device)  # 非热点权重为1，热点权重为10
+    criterion = torch.nn.CrossEntropyLoss(weight=weights)
 
     # training
     model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 11)
