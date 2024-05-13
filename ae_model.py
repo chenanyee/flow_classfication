@@ -5,7 +5,7 @@ import torch.nn.functional as F
 class ae_model(nn.Module):
     #[batch_size==4, channels==1, height==1200, width==1200]
     def __init__(self):
-        super(SimplifiedLargeImageAE, self).__init__()
+        super(ae_model, self).__init__()
         # Encoder part
         self.enc = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=3, padding=1),  # [B, 16, 1200, 1200]

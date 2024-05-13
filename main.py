@@ -1,5 +1,7 @@
 import os
+import time
 from cat_model import cat_model
+from ae_model import ae_model
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -51,7 +53,7 @@ if __name__ == '__main__':
                                                    )
 
     # load model
-    model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
+    model = ae_model().to(device)
 
     # set optimization function
     #optimizer = torch.optim.Adam(model.parameters(), lr=0.001)

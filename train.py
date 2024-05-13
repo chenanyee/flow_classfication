@@ -1,5 +1,6 @@
 import torch
 import os
+import time
 from datetime import timedelta
 from collections import defaultdict
 
@@ -9,15 +10,16 @@ def validate(net, validLoader, criterion):
     net.eval()
     total_loss = 0
     count = 0
+    running_loss = 0.0
     with torch.no_grad():
         for data in validLoader:
-            inputs = data.to(device)
+            inputs, _ = data
+            inputs = inputs.to(device)
             outputs = net(inputs)
             loss = criterion(outputs, inputs)
-            total_loss += loss.item() * data.size(0)
-            count += data.size(0)
+            running_loss += loss.item()
 
-    average_loss = total_loss / count
+    average_loss  = running_loss / len(validLoader.dataset)
     print(f"Validation Loss: {average_loss:.5f}")
     return average_loss
 
@@ -32,7 +34,8 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
         epoch_start = time.time()
         running_loss = 0.0
         for data in trainLoader:
-            inputs = data.to(device)
+            inputs, _ = data
+            inputs = inputs.to(device)
             optimizer.zero_grad()
             outputs = net(inputs)
             loss = criterion(outputs, inputs)
@@ -44,7 +47,7 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
         metrics['train_loss'].append(epoch_loss)
         ep_end = time.time()
         print('-----------------------------------------------')
-        print(f'[EPOCH] {epoch + 1}/{epochs}\n[LOSS] {epoch_loss:.5f}')
+        print(f'[EPOCH] {i + 1}/{epochs}\n[LOSS] {epoch_loss:.5f}')
         print(f'Epoch Complete in {ep_end- epoch_start:.5f} seconds')
 
         if i % 3 == 0 or i == epochs - 1:  # Evaluate every 3 epochs or the last epoch
@@ -52,11 +55,11 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
             if tmp_loss < best_loss:
                 best_loss = tmp_loss
                 best_model = net
-                model_path = f"model/epoch_{epoch + 1}_{best_loss:.4f}.pth"
+                model_path = f"model/epoch_{i + 1}_{best_loss:.4f}.pth"
                 os.makedirs(os.path.dirname(model_path), exist_ok=True)
                 torch.save(best_model.state_dict(), model_path)
 
     end = time.time()
     print('-----------------------------------------------')
     print(f'[System Complete: {timedelta(seconds=end - start)}]')
-    return bestModel
+    return best_model
