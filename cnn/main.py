@@ -12,8 +12,6 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from urllib.request import urlopen
 from train import train
-from datetime import timedelta
-from collections import defaultdict
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 from image_dataset import image_dataset
 
@@ -38,25 +36,19 @@ if __name__ == '__main__':
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
                                                    batch_size=4,
                                                    shuffle=True,
-                                                   num_workers=8,
-                                                   pin_memory=True,
-                                                   drop_last=True
-                                                   )
+                                                   num_workers=8)
     dataloadersValid = torch.utils.data.DataLoader(validDatasets,
                                                    batch_size=4,
-                                                   shuffle=False,
-                                                   num_workers=8,
-                                                   pin_memory=True,
-                                                   drop_last=False
-                                                   )
+                                                   shuffle=False)
 
     # load model
     model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
 
     # set optimization function
-    #optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5 )
-    criterion = nn.MSELoss(reduction='mean')
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+    weights = torch.tensor([1.0, 12.5], device=device)  # 非热点权重为1，热点权重为10
+    criterion = torch.nn.CrossEntropyLoss(weight=weights)
 
     # training
     model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 10)
