@@ -1,6 +1,5 @@
 import os
 import time
-from cat_model import cat_model
 from ae_model import ae_model
 import numpy as np
 import pandas as pd
@@ -16,6 +15,7 @@ from urllib.request import urlopen
 from train import train
 from datetime import timedelta
 from collections import defaultdict
+import matplotlib.pyplot as plt
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 from image_dataset import image_dataset
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     trainDatasets = image_dataset("./dataset/train.csv", "./dataset/train", dataTransformsTrain)
     validDatasets = image_dataset("./dataset/valid.csv", "./dataset/valid", dataTransformsValid)
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
-                                                   batch_size=4,
+                                                   batch_size=8,
                                                    shuffle=True,
                                                    num_workers=8,
                                                    pin_memory=True,
@@ -62,5 +62,5 @@ if __name__ == '__main__':
     criterion = nn.MSELoss(reduction='mean')
 
     # training
-    model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 10)
+    model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 50)
 
