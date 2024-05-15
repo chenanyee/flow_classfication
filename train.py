@@ -51,7 +51,7 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
         print(f'[EPOCH] {i + 1}/{epochs}\n[LOSS] {epoch_loss:.5f}')
         print(f'Epoch Complete in {ep_end- epoch_start:.5f} seconds')
 
-        if i % 3 == 0 or i == epochs - 1:  # Evaluate every 3 epochs or the last epoch
+        if i % 4 == 0 or i == epochs - 1:  # Evaluate every 3 epochs or the last epoch
             tmp_loss= validate(net, validLoader, criterion)
             if tmp_loss < best_loss:
                 best_loss = tmp_loss
