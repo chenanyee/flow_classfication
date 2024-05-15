@@ -35,10 +35,10 @@ if __name__ == '__main__':
         #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    trainDatasets = image_dataset("./dataset/train.csv", "./dataset/train", dataTransformsTrain)
-    validDatasets = image_dataset("./dataset/valid.csv", "./dataset/valid", dataTransformsValid)
+    trainDatasets = image_dataset("./dataset/train.csv", "", dataTransformsTrain)
+    validDatasets = image_dataset("./dataset/valid.csv", "", dataTransformsValid)
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
-                                                   batch_size=12,
+                                                   batch_size=16,
                                                    shuffle=True,
                                                    num_workers=8,
                                                    pin_memory=True,
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     # set optimization function
     #optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.002, weight_decay=1e-5 )
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001 )
     #ExpLR = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
     criterion = nn.MSELoss(reduction='mean')
 
