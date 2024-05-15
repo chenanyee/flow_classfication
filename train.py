@@ -3,7 +3,6 @@ import os
 import time
 from datetime import timedelta
 from collections import defaultdict
-import matplotlib.pyplot as plt
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -56,16 +55,11 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
             if tmp_loss < best_loss:
                 best_loss = tmp_loss
                 best_model = net
-                model_path = f"./model/epoch_{i + 1}_{best_loss:.4f}.pth"
+                model_path = f"model/epoch_{i + 1}_{best_loss:.4f}.pth"
                 os.makedirs(os.path.dirname(model_path), exist_ok=True)
                 torch.save(best_model.state_dict(), model_path)
 
     end = time.time()
     print('-----------------------------------------------')
     print(f'[System Complete: {timedelta(seconds=end - start)}]')
-    
-    _, ax = plt.subplots(1,1,figsize=(15,10))
-    ax.set_title('Loss')
-    ax.plot(metrics['train_loss'])
-    plt.savefig('./model/train_loss_plot.png')
     return best_model
