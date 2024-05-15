@@ -57,13 +57,6 @@ if __name__ == '__main__':
 
     # set optimization function
     #optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    initial_learning_rate = 0.001  # **************学习率比例可以调，一般调高收敛慢一点****************
-    lr_schedule = ExponentialDecay(
-        initial_learning_rate=initial_learning_rate,
-        decay_steps=300,
-        decay_rate=0.9,
-        staircase=False
-    )
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5 )
     ExpLR = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.98)
     criterion = nn.MSELoss(reduction='mean')
