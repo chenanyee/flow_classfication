@@ -10,10 +10,11 @@ def validate(net, validLoader, criterion):
     count = 0
     with torch.no_grad():
         for x, label in validLoader:
-            x, label = x.to(device), label.to(device, dtype=torch.long)
-            output = net(x)
+            x, label = x.to(device), label.to(device, dtype=torch.float)
+            output = net(x).squeeze()
             loss = criterion(output, label)
-            _, predicted = torch.max(output.data, 1)
+            predicted = (output > 0.5).float()
+            #_, predicted = torch.max(output.data, 1)
             count += label.size(0)
             accuracy += (predicted == label).sum().item()
             totalLoss += loss.item() * label.size(0)
@@ -32,13 +33,15 @@ def train(net, trainLoader, validLoader, optimizer, criterion, epochs):
         count = 0
         for x, label in trainLoader:
             x = x.to(device)
-            label = label.to(device, dtype=torch.long)
+            label = label.to(device, dtype=torch.float)
             optimizer.zero_grad()
-            output = net(x)
+            #output = net(x)
+            output = net(x).squeeze()
             loss = criterion(output, label)
             loss.backward()
             optimizer.step()
-            _, predicted = torch.max(output.data, 1)
+            #_, predicted = torch.max(output.data, 1)
+            predicted = (output > 0.5).float()
             count += label.size(0)
             accuracy += (predicted == label).sum().item()
             totalLoss += loss.item() * label.size(0)

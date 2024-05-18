@@ -28,22 +28,24 @@ def test(net, testLoader, criterion):
     with torch.no_grad():
         for x, label in testLoader:
             x = x.to(device)
-            label = label.to(device, dtype=torch.long)
-            output = net(x)
+            label = label.to(device, dtype=torch.float)
+            output = net(x).squeeze()
             loss = criterion(output, label)
-            _, predicted = torch.max(output.data, 1)
+            predicted = (output > 0.5).float()
+            #_, predicted = torch.max(output.data, 1)
             count += label.size(0)
             accuracy += (predicted == label).sum().item()
             totalLoss += loss.item() * label.size(0)
-    print(f"Test Loss: {totalLoss / count:.6f}")
+    print(f"Num: {count:.8f}")    
+    print(f"Test Loss: {totalLoss / count:.8f}")
     print(f"Test Accuracy: {accuracy / count * 100:.2f}%")
     return accuracy / count
 
 # 加载模型
 model = cat_model().to(device)
-model.load_state_dict(torch.load('./model/epoch_10_1.00.pth'))
+model.load_state_dict(torch.load('./model/epoch_2_0.34.pth'))
 
-criterion = torch.nn.CrossEntropyLoss()
+criterion = torch.nn.BCEWithLogitsLoss()
 
 # 执行测试
 test_accuracy = test(model, testLoader, criterion)

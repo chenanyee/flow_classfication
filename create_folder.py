@@ -5,7 +5,7 @@ import random
 
 # 原始图片文件夹路径
 #h_folder = './dataset/H/'
-nh_folder = './dataset_cnn/hotspot'
+nh_folder = './dataset_cnn/train_ori'
 
 # 目标文件夹路径
 train_folder_nh = './dataset_cnn/train/'

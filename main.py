@@ -31,8 +31,8 @@ if __name__ == '__main__':
         #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    trainDatasets = image_dataset("./dataset_cnn/train.csv", "", dataTransformsTrain)
-    validDatasets = image_dataset("./dataset_cnn/valid.csv", "", dataTransformsValid)
+    trainDatasets = image_dataset("./dataset_cnn/train_1.csv", "", dataTransformsTrain)
+    validDatasets = image_dataset("./dataset_cnn/test.csv", "", dataTransformsValid)
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
                                                    batch_size=4,
                                                    shuffle=True,
@@ -42,13 +42,14 @@ if __name__ == '__main__':
                                                    shuffle=False)
 
     # load model
-    model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
+    model = cat_model(in_channels=1, features= 8, num_classes=1).to(device)
 
     # set optimization function
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.01)
 
-    weights = torch.tensor([0.16, 0.84], device=device)  # 非热点权重为1，热点权重为10
-    criterion = torch.nn.CrossEntropyLoss()
+    #weights = torch.tensor([1.18, 6.4], device=device)  # 非热点权重为1，热点权重为10
+    #criterion = torch.nn.CrossEntropyLoss(weight=weights)
+    criterion = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([10.0], device=device))
 
     # training
     model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 20)
