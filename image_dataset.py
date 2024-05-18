@@ -12,7 +12,8 @@ class image_dataset(Dataset):
         #label_mapping = {'NH': 0, 'H': 1}
         #df['label'] = df['label'].map(label_mapping)
         #self.yTrain = df['label']
-        self.yTrain = pd.factorize(df['label'], sort=True)[0]
+        #self.yTrain = pd.factorize(df['label'], sort=True)[0]
+        self.yTrain = df['label'].map({'NH': 0, 'H': 1}).astype(int)
         self.transform = transform
 
     def __getitem__(self, index):

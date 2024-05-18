@@ -45,11 +45,11 @@ if __name__ == '__main__':
     model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
 
     # set optimization function
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-    weights = torch.tensor([1, 8], device=device)  # 非热点权重为1，热点权重为10
+    weights = torch.tensor([0.16, 0.84], device=device)  # 非热点权重为1，热点权重为10
     criterion = torch.nn.CrossEntropyLoss()
 
     # training
-    model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 10)
+    model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 20)
 
