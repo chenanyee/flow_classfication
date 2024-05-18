@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-test_dir = './dataset/test'
+test_dir = './dataset_cnn/test'
 
 # 初始化列表存储文件路径和标签
 file_paths = []
@@ -13,6 +13,8 @@ for filename in os.listdir(test_dir):
         file_path = os.path.join(test_dir, filename)
         label = filename[0]  # 文件名的第一个字母作为标签
         if label in ['N', 'H']:  # 只处理标签为N或H的文件
+            if label == 'H':  # 将N标签改为NH
+                label = 'H1'
             file_paths.append(file_path)
             labels.append(label)
 
@@ -23,6 +25,7 @@ df = pd.DataFrame({
 })
 
 # 保存为CSV文件
-df.to_csv('./dataset/test.csv', index=False)
+df.to_csv('./dataset_cnn/test.csv', index=False)
 
 print("测试集CSV文件已生成")
+

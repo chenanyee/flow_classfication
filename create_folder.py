@@ -5,22 +5,17 @@ import random
 
 # 原始图片文件夹路径
 #h_folder = './dataset/H/'
-nh_folder = './dataset/train/orignal'
+nh_folder = './dataset_cnn/hotspot'
 
 # 目标文件夹路径
-train_folder_h = './dataset/train/H/'
-train_folder_nh = './dataset/train/NH/'
-valid_folder_h = './dataset/valid/H/'
-valid_folder_nh = './dataset/valid/NH/'
+train_folder_nh = './dataset_cnn/train/'
+valid_folder_nh = './dataset_cnn/valid/'
 
 # 创建新文件夹
-os.makedirs(train_folder_h, exist_ok=True)
 os.makedirs(train_folder_nh, exist_ok=True)
-os.makedirs(valid_folder_h, exist_ok=True)
 os.makedirs(valid_folder_nh, exist_ok=True)
 
 # 获取H和NH文件夹中的所有文件
-#h_files = os.listdir(h_folder)
 nh_files = os.listdir(nh_folder)
 
 # 打乱文件列表
@@ -52,6 +47,5 @@ def move_and_create_csv(files, num_train, train_folder, valid_folder, folder, la
     df_train.to_csv(os.path.join(train_folder, 'train.csv'), index=False)
     df_valid.to_csv(os.path.join(valid_folder, 'valid.csv'), index=False)
 
-#move_and_create_csv(h_files, num_train_h, train_folder_h, valid_folder_h, 'H')
 move_and_create_csv(nh_files, num_train_nh, train_folder_nh, valid_folder_nh, nh_folder, 'NH')
 

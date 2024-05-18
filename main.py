@@ -1,6 +1,5 @@
 import os
-import time
-from ae_model import ae_model
+from cat_model import cat_model
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -13,9 +12,6 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from urllib.request import urlopen
 from train import train
-from datetime import timedelta
-from collections import defaultdict
-import matplotlib.pyplot as plt
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 from image_dataset import image_dataset
 
@@ -35,31 +31,24 @@ if __name__ == '__main__':
         #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-    trainDatasets = image_dataset("./dataset/train.csv", "", dataTransformsTrain)
-    validDatasets = image_dataset("./dataset/valid.csv", "", dataTransformsValid)
+    trainDatasets = image_dataset("./dataset_cnn/train.csv", "", dataTransformsTrain)
+    validDatasets = image_dataset("./dataset_cnn/valid.csv", "", dataTransformsValid)
     dataloadersTrain = torch.utils.data.DataLoader(trainDatasets,
-                                                   batch_size=16,
+                                                   batch_size=4,
                                                    shuffle=True,
-                                                   num_workers=8,
-                                                   pin_memory=True,
-                                                   drop_last=True
-                                                   )
+                                                   num_workers=8)
     dataloadersValid = torch.utils.data.DataLoader(validDatasets,
-                                                   batch_size=8,
-                                                   shuffle=False,
-                                                   num_workers=8,
-                                                   pin_memory=True,
-                                                   drop_last=False
-                                                   )
+                                                   batch_size=4,
+                                                   shuffle=False)
 
     # load model
-    model = ae_model().to(device)
+    model = cat_model(in_channels=1, features= 8, num_classes=2).to(device)
 
     # set optimization function
-    #optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001 )
-    #ExpLR = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
-    criterion = nn.MSELoss(reduction='mean')
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+    weights = torch.tensor([1, 8], device=device)  # 非热点权重为1，热点权重为10
+    criterion = torch.nn.CrossEntropyLoss()
 
     # training
     model_ft = train(model, dataloadersTrain, dataloadersValid, optimizer, criterion, 10)

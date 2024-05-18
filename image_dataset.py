@@ -12,7 +12,7 @@ class image_dataset(Dataset):
         #label_mapping = {'NH': 0, 'H': 1}
         #df['label'] = df['label'].map(label_mapping)
         #self.yTrain = df['label']
-        #self.yTrain = pd.factorize(df['label'], sort=True)[0]
+        self.yTrain = pd.factorize(df['label'], sort=True)[0]
         self.transform = transform
 
     def __getitem__(self, index):
@@ -20,8 +20,8 @@ class image_dataset(Dataset):
         img = img.convert('L')
         if self.transform is not None:
             img = self.transform(img)
-        return img, img
+        return img, self.yTrain[index]
 
     def __len__(self):
-        return len(self.xTrain)
+        return len(self.xTrain.index)
 
