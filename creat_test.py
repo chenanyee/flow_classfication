@@ -1,7 +1,8 @@
 import os
 import pandas as pd
+from sklearn.utils import shuffle
 
-test_dir = './dataset_cnn/train_ori/NH'
+test_dir = './dataset/test'
 
 # 初始化列表存储文件路径和标签
 file_paths = []
@@ -24,8 +25,9 @@ df = pd.DataFrame({
     'label': labels
 })
 
+df = shuffle(df, random_state=42)
 # 保存为CSV文件
-df.to_csv('./dataset_cnn/train_1.csv', index=False)
+df.to_csv('./dataset/test.csv', index=False)
 
 print("测试集CSV文件已生成")
 

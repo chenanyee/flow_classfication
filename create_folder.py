@@ -5,7 +5,7 @@ import random
 
 # 原始图片文件夹路径
 #h_folder = './dataset/H/'
-nh_folder = './dataset_cnn/train_ori'
+nh_folder = './dataset/train'
 
 # 目标文件夹路径
 train_folder_nh = './dataset_cnn/train/'
@@ -23,7 +23,7 @@ nh_files = os.listdir(nh_folder)
 random.shuffle(nh_files)
 
 # 分割比例
-split_ratio = 0.8
+split_ratio = 1
 #num_train_h = int(len(h_files) * split_ratio)
 num_train_nh = int(len(nh_files) * split_ratio)
 
